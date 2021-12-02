@@ -24,7 +24,7 @@ class DrawerContent extends React.Component {
         </DrawerContentScrollView>
         <View style={styles.containerSection}>
           <DrawerItem
-            label="Sign Out"
+            label="Log Out"
             icon={({color, size}) => (
               <Icon color={color} size={size} name="log-out" />
             )}

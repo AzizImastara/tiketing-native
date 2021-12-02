@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Image} from 'react-native';
 
 function SplashScreen(props) {
   useEffect(() => {
@@ -10,11 +10,11 @@ function SplashScreen(props) {
       } else {
         props.navigation.navigate('AuthScreen');
       }
-    }, 1000);
+    }, 2000);
   }, []);
   return (
     <View style={styles.container}>
-      <Text>Splash Screen</Text>
+      <Image style={styles.image} source={require('../../assets/Vector.png')} />
     </View>
   );
 }
@@ -23,6 +23,12 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    // backgroundColor: 'red',
+  },
+  image: {
+    // flex: 1,
+    // width: 300,
+    // height: 300,
   },
 });
 

@@ -8,29 +8,39 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-function Login(props) {
+function Register(props) {
   // const handleLogin = () => {
   //   props.navigation.navigate('AppScreen');
   // };
   const handleLogin = () => {
-    props.navigation.navigate('AppScreen', {
-      screen: 'Home',
+    props.navigation.navigate('AuthScreen', {
+      screen: 'Login',
       // params: {
       //   nama: 'Bagus TH',
       // },
-    });
-  };
-
-  const handleReset = () => {
-    props.navigation.navigate('AuthScreen', {
-      screen: 'ForgotPassword',
     });
   };
   return (
     <View style={styles.container}>
       <View>
         <Image source={require('../../assets/logo.png')} />
-        <Text style={styles.headerText}>Sign In</Text>
+        <Text style={styles.headerText}>Sign Up</Text>
+      </View>
+
+      <View>
+        <Text style={styles.layoutText}>First Name</Text>
+        <TextInput
+          placeholder="Write your first name"
+          style={styles.inputBorder}
+        />
+      </View>
+
+      <View>
+        <Text style={styles.layoutText}>Last Name</Text>
+        <TextInput
+          placeholder="Write your last name"
+          style={styles.inputBorder}
+        />
       </View>
 
       <View>
@@ -46,14 +56,14 @@ function Login(props) {
         />
       </View>
 
-      <TouchableOpacity style={styles.buttonPrimary} onPress={handleLogin}>
-        <Text style={styles.textButton}>Sign In</Text>
+      <TouchableOpacity style={styles.buttonPrimary}>
+        <Text style={styles.textButton}>Join for free</Text>
       </TouchableOpacity>
 
       <View style={styles.resetRow}>
-        <Text style={styles.resetText}>Forgot your password? </Text>
-        <Text style={styles.resetTextColor} onPress={handleReset}>
-          Reset now
+        <Text style={styles.resetText}>Do you already have an account? </Text>
+        <Text style={styles.resetTextColor} onPress={handleLogin}>
+          Log in
         </Text>
       </View>
     </View>
@@ -106,4 +116,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default Register;
