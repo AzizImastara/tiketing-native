@@ -9,6 +9,10 @@ import DrawerContent from '../components/Drawer';
 
 import Home from '../screen/Home';
 import Profile from '../screen/Profile';
+import MovieDetail from '../screen/MovieDetail';
+import OrderPage from '../screen/OrderPage';
+import PaymentPage from '../screen/PaymentPage';
+import Ticket from '../screen/Ticket';
 
 function HomeNavigator() {
   return (
@@ -16,6 +20,26 @@ function HomeNavigator() {
       <Stack.Screen
         component={Home}
         name="Home"
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        component={MovieDetail}
+        name="MovieDetail"
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        component={OrderPage}
+        name="OrderPage"
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        component={PaymentPage}
+        name="PaymentPage"
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        component={Ticket}
+        name="Ticket"
         options={{headerShown: false}}
       />
     </Stack.Navigator>

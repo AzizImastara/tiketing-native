@@ -14,12 +14,17 @@ function Home(props) {
   // useEffect(() => {
   //   console.log(props.route.params.nama);
   // }, []);
+
+  const handleDetail = () => {
+    props.navigation.navigate('MovieDetail');
+  };
   return (
     <ScrollView>
       <View style={styles.container}>
         <View style={{padding: 20}}>
           <Text style={styles.headerText}>Nearest Cinema, Newest Movie,</Text>
           <Text style={styles.headerText2}>Find out now!</Text>
+          {/* <Text style={styles.headerText2}>Find out now!</Text> */}
         </View>
 
         <View
@@ -46,7 +51,9 @@ function Home(props) {
               <Image source={require('../../assets/Spiderman.png')} />
               <Text style={styles.movieTitle}>Spider-Man: Home Coming</Text>
               <Text style={styles.movieGenre}>Action, Adventure, Sci-Fi</Text>
-              <TouchableOpacity style={styles.movieButton}>
+              <TouchableOpacity
+                style={styles.movieButton}
+                onPress={handleDetail}>
                 <Text style={styles.movieButtonText}>Details</Text>
               </TouchableOpacity>
             </View>

@@ -14,7 +14,10 @@ function SplashScreen(props) {
   }, []);
   return (
     <View style={styles.container}>
-      <Image style={styles.image} source={require('../../assets/Vector.png')} />
+      <Image
+        style={styles.image}
+        source={require('../../assets/ticketwhite.png')}
+      />
     </View>
   );
 }
@@ -23,7 +26,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    // backgroundColor: 'red',
+    backgroundColor: '#5f2eea',
   },
   image: {
     // flex: 1,
