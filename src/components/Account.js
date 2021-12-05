@@ -38,6 +38,22 @@ function Account(props) {
         </View>
         <View>
           <Text style={styles.textPoint}>180 points become a master</Text>
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#fff',
+              borderRadius: 8,
+              width: '100%',
+              marginTop: 12,
+              borderWidth: 1,
+              borderColor: '#F5F6F8',
+            }}>
+            <Text
+              style={{
+                width: '50%',
+                backgroundColor: '#5f2eea',
+                borderRadius: 8,
+              }}></Text>
+          </TouchableOpacity>
         </View>
       </View>
       <Text

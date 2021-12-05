@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Footer from '../../components/Footer';
+import Icon from 'react-native-vector-icons/Feather';
 
 function OrderPage(props) {
   const handlePayment = () => {
@@ -17,10 +18,141 @@ function OrderPage(props) {
     <ScrollView>
       <View style={styles.container}>
         <View>
-          <Text>Chose Your Seat</Text>
+          <Text
+            style={{
+              color: '#14142b',
+              fontSize: 18,
+              fontWeight: '600',
+              marginVertical: 12,
+            }}>
+            Chose Your Seat
+          </Text>
+        </View>
+        <View
+          style={{
+            display: 'flex',
+            backgroundColor: '#fff',
+            padding: 20,
+          }}>
+          <Text
+            style={{
+              backgroundColor: '#dedede',
+              height: 200,
+            }}></Text>
+          <View style={{marginVertical: 12, marginLeft: 12}}>
+            <Text style={{color: '#000', fontSize: 16, fontWeight: '600'}}>
+              Seating key
+            </Text>
+          </View>
+          <View style={{flexDirection: 'row', backgroundColor: '#fff'}}>
+            <View style={{marginLeft: 12, marginRight: 24}}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginVertical: 12,
+                }}>
+                <Icon
+                  name="arrow-down"
+                  size={30}
+                  color="#6e7191"
+                  style={{marginRight: 8}}
+                />
+                <Text>A - G</Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginVertical: 12,
+                }}>
+                <Text
+                  style={{
+                    backgroundColor: '#D6D8E7',
+                    width: 30,
+                    height: 30,
+                    borderRadius: 4,
+                    marginRight: 8,
+                  }}></Text>
+                <Text>Available</Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginVertical: 12,
+                }}>
+                <Text
+                  style={{
+                    backgroundColor: '#F589D7',
+                    width: 30,
+                    height: 30,
+                    borderRadius: 4,
+                    marginRight: 8,
+                  }}></Text>
+                <Text>Love nest</Text>
+              </View>
+            </View>
+            <View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginVertical: 12,
+                }}>
+                <Icon
+                  name="arrow-right"
+                  size={30}
+                  color="#6e7191"
+                  style={{marginRight: 8}}
+                />
+                <Text>1 - 14</Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginVertical: 12,
+                }}>
+                <Text
+                  style={{
+                    backgroundColor: '#5f2eea',
+                    width: 30,
+                    height: 30,
+                    borderRadius: 4,
+                    marginRight: 8,
+                  }}></Text>
+                <Text>Selected</Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginVertical: 12,
+                }}>
+                <Text
+                  style={{
+                    backgroundColor: '#6E7191',
+                    width: 30,
+                    height: 30,
+                    borderRadius: 4,
+                    marginRight: 8,
+                  }}></Text>
+                <Text>Sold</Text>
+              </View>
+            </View>
+          </View>
         </View>
         <View>
-          <Text>Order Info</Text>
+          <Text
+            style={{
+              color: '#14142b',
+              fontSize: 18,
+              fontWeight: '600',
+              marginVertical: 12,
+            }}>
+            Order Info
+          </Text>
         </View>
         <View
           style={{
@@ -34,8 +166,12 @@ function OrderPage(props) {
               style={{width: 80, resizeMode: 'contain'}}
               source={require('../../assets/cineone.png')}
             />
-            <Text>CineOne21 Cinema</Text>
-            <Text>Spider-Man: Homecoming</Text>
+            <Text style={{fontSize: 24, fontWeight: '600', color: '#14142b'}}>
+              CineOne21 Cinema
+            </Text>
+            <Text style={{fontSize: 14, color: '#14142b', marginTop: 8}}>
+              Spider-Man: Homecoming
+            </Text>
           </View>
           <View style={styles.between}>
             <View style={styles.betweeenContent}>
@@ -91,6 +227,7 @@ const styles = StyleSheet.create({
   betweenLeft: {
     fontSize: 14,
     color: '#6b6b6b',
+    marginBottom: 12,
   },
   betweenRight: {
     fontSize: 14,

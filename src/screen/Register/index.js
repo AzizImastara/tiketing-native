@@ -53,6 +53,7 @@ function Register(props) {
         <TextInput
           placeholder="Write your password"
           style={styles.inputBorder}
+          secureTextEntry={true}
         />
       </View>
 
@@ -74,6 +75,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 50,
     justifyContent: 'center',
+    backgroundColor: '#fff',
   },
   inputBorder: {
     borderColor: '#d3d3d3',

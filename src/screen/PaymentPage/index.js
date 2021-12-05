@@ -17,11 +17,11 @@ function PaymentPage(props) {
   };
   return (
     <ScrollView>
+      <View style={styles.totalPayment}>
+        <Text style={styles.totalPaymentText}>Total Payment</Text>
+        <Text style={styles.totalPaymentPrice}>$30.00</Text>
+      </View>
       <View style={styles.container}>
-        <View style={styles.totalPayment}>
-          <Text style={styles.totalPaymentText}>Total Payment</Text>
-          <Text style={styles.totalPaymentPrice}>$30.00</Text>
-        </View>
         <View>
           <Text style={styles.paymentMethodHeader}>Payment Method</Text>
         </View>
@@ -151,6 +151,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    backgroundColor: '#fff',
+    padding: 20,
   },
   totalPaymentText: {
     fontSize: 16,

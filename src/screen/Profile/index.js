@@ -25,17 +25,13 @@ function Profile(props) {
           backgroundColor: '#fff',
           marginBottom: 12,
         }}>
-        <TouchableOpacity>
-          <Text
-            // onPress={() => setButton(false)}
-            style={{fontSize: 14, color: '#14142b'}}>
+        <TouchableOpacity onPress={() => setButton(true)}>
+          <Text style={button ? styles.colorStyle : styles.colorDisabled}>
             Details Account
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity>
-          <Text
-            // onPress={() => setButton(false)}
-            style={{fontSize: 14, color: '#14142b'}}>
+        <TouchableOpacity onPress={() => setButton(false)}>
+          <Text style={button ? styles.colorDisabled : styles.colorStyle}>
             Order History
           </Text>
         </TouchableOpacity>
@@ -49,6 +45,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+  },
+  colorStyle: {
+    color: '#14142b',
+    padding: 12,
+    borderBottomWidth: 1,
+  },
+  colorDisabled: {
+    color: '#dedede',
+    padding: 12,
   },
 });
 
