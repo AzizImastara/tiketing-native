@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -7,18 +7,33 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from '../../utils/axios';
+import {connect} from 'react-redux';
+import {login} from '../../stores/actions/auth';
 
 function Login(props) {
-  // const handleLogin = () => {
-  //   props.navigation.navigate('AppScreen');
-  // };
-  const handleLogin = () => {
-    props.navigation.navigate('AppScreen', {
-      screen: 'Home',
-      // params: {
-      //   nama: 'Bagus TH',
-      // },
-    });
+  const [form, setForm] = useState({email: '', password: ''});
+
+  const handleLogin = async () => {
+    try {
+      // const result = await axios.post('/auth/login', form);
+      const result = await props.login(form);
+      await AsyncStorage.setItem('token', result.value.data.data.token);
+      await AsyncStorage.setItem(
+        'refreshToken',
+        result.value.data.data.refreshToken,
+      );
+      props.navigation.navigate('AppScreen', {
+        screen: 'Home',
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleInput = (text, name) => {
+    setForm({...form, [name]: text});
   };
 
   const handleReset = () => {
@@ -35,7 +50,11 @@ function Login(props) {
 
       <View>
         <Text style={styles.layoutText}>Email</Text>
-        <TextInput placeholder="Write your email" style={styles.inputBorder} />
+        <TextInput
+          placeholder="Write your email"
+          style={styles.inputBorder}
+          onChangeText={text => handleInput(text, 'email')}
+        />
       </View>
 
       <View>
@@ -43,6 +62,8 @@ function Login(props) {
         <TextInput
           placeholder="Write your password"
           style={styles.inputBorder}
+          onChangeText={text => handleInput(text, 'password')}
+          secureTextEntry={true}
         />
       </View>
 
@@ -107,4 +128,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+const mapStateToProps = state => ({
+  auth: state.auth,
+});
+
+const mapDispatchToProps = {login};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

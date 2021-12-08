@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -6,14 +6,56 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
+  FlatList,
 } from 'react-native';
 import styles from './style';
 import Footer from '../../components/Footer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from '../../utils/axios';
 
 function Home(props) {
-  // useEffect(() => {
-  //   console.log(props.route.params.nama);
-  // }, []);
+  const [movie, setMovie] = useState([]);
+  const [movieUpcoming, setMovieUpcoming] = useState([]);
+
+  useEffect(() => {
+    getToken();
+    getMovie();
+    getMovieUpcoming();
+  }, []);
+
+  const getToken = async () => {
+    // const dataToken = await AsyncStorage.getItem('token');
+    // console.log(dataToken);
+    AsyncStorage.getAllKeys((err, keys) => {
+      AsyncStorage.multiGet(keys, (error, stores) => {
+        stores.map((result, i, store) => {
+          console.log({[store[i][0]]: store[i][1]});
+          return true;
+        });
+      });
+    });
+  };
+
+  const getMovie = async () => {
+    const dateNow = new Date().toISOString().split('-')[1];
+    // console.log(dateNow, 'dateeenosw');
+
+    try {
+      const result = await axios.get(`/movie?page=1&limit=3&filter=${dateNow}`);
+      setMovie(result.data.data);
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
+
+  const getMovieUpcoming = async () => {
+    try {
+      const result = await axios.get(`/movie?page=1&limit=50$filter=`);
+      setMovieUpcoming(result.data.data);
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
 
   const handleDetail = () => {
     props.navigation.navigate('MovieDetail');
@@ -24,13 +66,11 @@ function Home(props) {
         <View style={{padding: 20}}>
           <Text style={styles.headerText}>Nearest Cinema, Newest Movie,</Text>
           <Text style={styles.headerText2}>Find out now!</Text>
-          {/* <Text style={styles.headerText2}>Find out now!</Text> */}
         </View>
 
         <View
           style={{
             display: 'flex',
-            // backgroundColor: 'black',
             alignItems: 'center',
             marginVertical: 20,
           }}>
@@ -46,26 +86,27 @@ function Home(props) {
             <Text style={styles.showingCaptionText2}>view all</Text>
           </View>
 
-          <ScrollView horizontal style={{marginVertical: 20}}>
-            <View style={styles.movieContent}>
-              <Image source={require('../../assets/Spiderman.png')} />
-              <Text style={styles.movieTitle}>Spider-Man: Home Coming</Text>
-              <Text style={styles.movieGenre}>Action, Adventure, Sci-Fi</Text>
-              <TouchableOpacity
-                style={styles.movieButton}
-                onPress={handleDetail}>
-                <Text style={styles.movieButtonText}>Details</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.movieContent}>
-              <Image source={require('../../assets/Spiderman.png')} />
-              <Text style={styles.movieTitle}>Spider-Man: Home Coming</Text>
-              <Text style={styles.movieGenre}>Action, Adventure, Sci-Fi</Text>
-              <TouchableOpacity style={styles.movieButton}>
-                <Text style={styles.movieButtonText}>Details</Text>
-              </TouchableOpacity>
-            </View>
-          </ScrollView>
+          <FlatList
+            horizontal
+            data={movie}
+            renderItem={({item}) => (
+              <View style={styles.movieContent}>
+                <Image
+                  style={styles.movieImage}
+                  source={
+                    item.image
+                      ? {
+                          uri: `http://192.168.43.195:3001/uploads/movie/${item.image}`,
+                        }
+                      : require('../../assets/black.jpg')
+                  }
+                />
+                <Text style={styles.movieTitle}>{item.name}</Text>
+                <Text style={styles.movieGenre}>{item.category}</Text>
+              </View>
+            )}
+            keyExtractor={item => item.id}
+          />
         </View>
 
         <View style={{padding: 20}}>
@@ -104,24 +145,32 @@ function Home(props) {
             </TouchableOpacity>
           </ScrollView>
 
-          <ScrollView horizontal>
-            <View style={styles.movieContent}>
-              <Image source={require('../../assets/Lionking.png')} />
-              <Text style={styles.movieTitle}>Lion King</Text>
-              <Text style={styles.movieGenre}>Action, Adventure, Sci-Fi</Text>
-              <TouchableOpacity style={styles.movieButton}>
-                <Text style={styles.movieButtonText}>Details</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.movieContent}>
-              <Image source={require('../../assets/Lionking.png')} />
-              <Text style={styles.movieTitle}>Lion King</Text>
-              <Text style={styles.movieGenre}>Action, Adventure, Sci-Fi</Text>
-              <TouchableOpacity style={styles.movieButton}>
-                <Text style={styles.movieButtonText}>Details</Text>
-              </TouchableOpacity>
-            </View>
-          </ScrollView>
+          <FlatList
+            horizontal
+            data={movieUpcoming}
+            renderItem={({item}) => (
+              <View style={styles.movieContent}>
+                <Image
+                  style={styles.movieImage}
+                  source={
+                    item.image
+                      ? {
+                          uri: `http://192.168.43.195:3001/uploads/movie/${item.image}`,
+                        }
+                      : require('../../assets/black.jpg')
+                  }
+                />
+                <Text style={styles.movieTitle}>{item.name}</Text>
+                <Text style={styles.movieGenre}>{item.category}</Text>
+                <TouchableOpacity
+                  style={styles.movieButton}
+                  onPress={handleDetail}>
+                  <Text style={styles.movieButtonText}>Details</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+            keyExtractor={item => item.id}
+          />
         </View>
 
         <View style={{marginHorizontal: 20}}>

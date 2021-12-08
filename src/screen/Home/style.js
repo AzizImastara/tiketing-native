@@ -50,6 +50,7 @@ export default StyleSheet.create({
     paddingVertical: 24,
     width: 200,
     marginRight: 16,
+    marginVertical: 12,
   },
   movieTitle: {
     fontSize: 20,
@@ -133,5 +134,11 @@ export default StyleSheet.create({
     borderRadius: 4,
     marginBottom: 12,
     paddingHorizontal: 12,
+  },
+  movieImage: {
+    width: 150,
+    height: 200,
+    resizeMode: 'cover',
+    borderRadius: 12,
   },
 });
