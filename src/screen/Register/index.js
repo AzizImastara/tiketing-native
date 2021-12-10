@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -7,11 +7,9 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
+import axios from '../../utils/axios';
 
 function Register(props) {
-  // const handleLogin = () => {
-  //   props.navigation.navigate('AppScreen');
-  // };
   const handleLogin = () => {
     props.navigation.navigate('AuthScreen', {
       screen: 'Login',
@@ -20,6 +18,34 @@ function Register(props) {
       // },
     });
   };
+
+  const [form, setForm] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+  });
+
+  const handleRegister = async () => {
+    try {
+      const result = await axios.post('/auth/register', form);
+      alert('Succes register, please check your email !');
+      props.navigation.navigate('AuthScreen', {
+        screen: 'Login',
+        // params: {
+        //   nama: 'Bagus TH',
+        // },
+      });
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleInput = (text, name) => {
+    setForm({...form, [name]: text});
+  };
+
   return (
     <View style={styles.container}>
       <View>
@@ -32,6 +58,7 @@ function Register(props) {
         <TextInput
           placeholder="Write your first name"
           style={styles.inputBorder}
+          onChangeText={text => handleInput(text, 'firstName')}
         />
       </View>
 
@@ -40,12 +67,17 @@ function Register(props) {
         <TextInput
           placeholder="Write your last name"
           style={styles.inputBorder}
+          onChangeText={text => handleInput(text, 'lastName')}
         />
       </View>
 
       <View>
         <Text style={styles.layoutText}>Email</Text>
-        <TextInput placeholder="Write your email" style={styles.inputBorder} />
+        <TextInput
+          placeholder="Write your email"
+          style={styles.inputBorder}
+          onChangeText={text => handleInput(text, 'email')}
+        />
       </View>
 
       <View>
@@ -54,10 +86,11 @@ function Register(props) {
           placeholder="Write your password"
           style={styles.inputBorder}
           secureTextEntry={true}
+          onChangeText={text => handleInput(text, 'password')}
         />
       </View>
 
-      <TouchableOpacity style={styles.buttonPrimary}>
+      <TouchableOpacity style={styles.buttonPrimary} onPress={handleRegister}>
         <Text style={styles.textButton}>Join for free</Text>
       </TouchableOpacity>
 

@@ -12,16 +12,41 @@ import styles from './style';
 import Footer from '../../components/Footer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from '../../utils/axios';
+import {API_HOST} from '@env';
 
 function Home(props) {
   const [movie, setMovie] = useState([]);
   const [movieUpcoming, setMovieUpcoming] = useState([]);
+  const [filter, setFilter] = useState('');
+
+  // const month = [
+  //   {name: 'January'},
+  //   {name: 'February'},
+  //   {name: 'March'},
+  //   {name: 'April'},
+  //   {name: 'May'},
+  //   {name: 'June'},
+  //   {name: 'July'},
+  //   {name: 'August'},
+  //   {name: 'September'},
+  //   {name: 'October'},
+  //   {name: 'November'},
+  //   {name: 'Desember'},
+  // ];
+
+  console.log(filter);
 
   useEffect(() => {
     getToken();
-    getMovie();
-    getMovieUpcoming();
   }, []);
+
+  useEffect(() => {
+    getMovie();
+  }, []);
+
+  useEffect(() => {
+    getMovieUpcoming();
+  }, [filter]);
 
   const getToken = async () => {
     // const dataToken = await AsyncStorage.getItem('token');
@@ -50,15 +75,16 @@ function Home(props) {
 
   const getMovieUpcoming = async () => {
     try {
-      const result = await axios.get(`/movie?page=1&limit=50$filter=`);
+      const result = await axios.get(`/movie?page=1&limit=50&filter=${filter}`);
+      // console.log(result, 'resss');
       setMovieUpcoming(result.data.data);
     } catch (error) {
-      console.log(error.response);
+      console.log(error.response, 'error');
     }
   };
 
-  const handleDetail = () => {
-    props.navigation.navigate('MovieDetail');
+  const handleDetail = id => {
+    props.navigation.navigate('MovieDetail', {params: {idMovie: id}});
   };
   return (
     <ScrollView>
@@ -96,7 +122,7 @@ function Home(props) {
                   source={
                     item.image
                       ? {
-                          uri: `http://192.168.43.195:3001/uploads/movie/${item.image}`,
+                          uri: `${API_HOST}/uploads/movie/${item.image}`,
                         }
                       : require('../../assets/black.jpg')
                   }
@@ -115,32 +141,63 @@ function Home(props) {
             <Text style={styles.showingCaptionText2}>view all</Text>
           </View>
 
+          {/* <FlatList
+            horizontal
+            data={month}
+            renderItem={({item}) => (
+              <TouchableOpacity
+                style={styles.monthDate}
+                onPress={() => setFilter(item)}>
+                <Text style={styles.monthDateText}>{item.name}</Text>
+              </TouchableOpacity>
+            )}
+            keyExtractor={item => item.name}
+          /> */}
+
           <ScrollView horizontal>
-            <TouchableOpacity style={styles.monthDate}>
+            <TouchableOpacity
+              style={styles.monthDate}
+              onPress={() => setFilter('9')}>
               <Text style={styles.monthDateText}>September</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.monthDate}>
+            <TouchableOpacity
+              style={styles.monthDate}
+              onPress={() => setFilter('10')}>
               <Text style={styles.monthDateText}>October</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.monthDate}>
+            <TouchableOpacity
+              style={styles.monthDate}
+              onPress={() => setFilter('11')}>
               <Text style={styles.monthDateText}>November</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.monthDate}>
+            <TouchableOpacity
+              style={styles.monthDate}
+              onPress={() => setFilter('12')}>
               <Text style={styles.monthDateText}>Desember</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.monthDate}>
+            <TouchableOpacity
+              style={styles.monthDate}
+              onPress={() => setFilter('1')}>
               <Text style={styles.monthDateText}>January</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.monthDate}>
+            <TouchableOpacity
+              style={styles.monthDate}
+              onPress={() => setFilter('2')}>
               <Text style={styles.monthDateText}>February</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.monthDate}>
+            <TouchableOpacity
+              style={styles.monthDate}
+              onPress={() => setFilter('3')}>
               <Text style={styles.monthDateText}>March</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.monthDate}>
+            <TouchableOpacity
+              style={styles.monthDate}
+              onPress={() => setFilter('4')}>
               <Text style={styles.monthDateText}>April</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.monthDate}>
+            <TouchableOpacity
+              style={styles.monthDate}
+              onPress={() => setFilter('5')}>
               <Text style={styles.monthDateText}>May</Text>
             </TouchableOpacity>
           </ScrollView>
@@ -155,7 +212,7 @@ function Home(props) {
                   source={
                     item.image
                       ? {
-                          uri: `http://192.168.43.195:3001/uploads/movie/${item.image}`,
+                          uri: `${API_HOST}/uploads/movie/${item.image}`,
                         }
                       : require('../../assets/black.jpg')
                   }
@@ -164,7 +221,7 @@ function Home(props) {
                 <Text style={styles.movieGenre}>{item.category}</Text>
                 <TouchableOpacity
                   style={styles.movieButton}
-                  onPress={handleDetail}>
+                  onPress={() => handleDetail(item.id)}>
                   <Text style={styles.movieButtonText}>Details</Text>
                 </TouchableOpacity>
               </View>

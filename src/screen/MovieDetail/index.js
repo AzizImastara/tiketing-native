@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -10,12 +10,31 @@ import {
 import Footer from '../../components/Footer';
 import DatePicker from 'react-native-date-picker';
 import {Picker} from '@react-native-picker/picker';
+import axios from '../../utils/axios';
+import {API_HOST} from '@env';
 
 function MovieDetail(props) {
+  const [dataMovie, setDataMovie] = useState([]);
   const [date, setDate] = useState(new Date());
   const [openDate, setOpenDate] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState();
 
+  useEffect(() => {
+    getDataMovie(props.route.params.params.idMovie);
+    console.log(props.route.params.params.idMovie);
+  }, [props.route.params.params]);
+
+  const getDataMovie = async id => {
+    try {
+      const result = await axios.get(`/movie/${id}`);
+      console.log(result, 'resss');
+      setDataMovie(result.data.data[0]);
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
+
+  console.log(dataMovie, 'SAFHAJHSGFJH');
   const handleOrder = () => {
     props.navigation.navigate('OrderPage');
   };
@@ -25,14 +44,21 @@ function MovieDetail(props) {
         <View style={styles.container}>
           <View style={styles.detailHeader}>
             <View style={styles.detailHeaderImage}>
-              <Image source={require('../../assets/Spiderman.png')} />
+              <Image
+                style={styles.movieImage}
+                source={
+                  dataMovie?.image
+                    ? {uri: `${API_HOST}/uploads/movie/${dataMovie?.image}`}
+                    : require('../../assets/black.jpg')
+                }
+              />
             </View>
             <View style={styles.detailHeaderTitle}>
               <Text style={styles.detailHeaderTitleJudul}>
-                Spider-Man: Homecoming
+                {dataMovie?.name || ''}
               </Text>
               <Text style={styles.detailHeaderTitleGenre}>
-                Adventure, Action, Sci-Fi
+                {dataMovie?.category || ''}
               </Text>
             </View>
           </View>
@@ -41,23 +67,29 @@ function MovieDetail(props) {
             <View style={styles.movieDetail}>
               <View>
                 <Text style={styles.detailTextHeader}>Release Date</Text>
-                <Text style={styles.detailTextHeaderDesc}>June 28, 2017</Text>
+                <Text style={styles.detailTextHeaderDesc}>
+                  {dataMovie?.releaseDate || ''}
+                </Text>
               </View>
               <View>
                 <Text style={styles.detailTextHeader}>Duration</Text>
-                <Text style={styles.detailTextHeaderDesc}>2 hrs 13 min</Text>
+                <Text style={styles.detailTextHeaderDesc}>
+                  {dataMovie?.duration || ''}
+                </Text>
               </View>
             </View>
 
             <View style={styles.movieDetail}>
               <View>
                 <Text style={styles.detailTextHeader}>Directed by</Text>
-                <Text style={styles.detailTextHeaderDesc}>Jon Watss</Text>
+                <Text style={styles.detailTextHeaderDesc}>
+                  {dataMovie?.director || ''}
+                </Text>
               </View>
               <View>
                 <Text style={styles.detailTextHeader}>Casts</Text>
                 <Text style={styles.detailTextHeaderDesc}>
-                  Tom Holland, Robert Downey Jr., etc.
+                  {dataMovie?.cast || ''}
                 </Text>
               </View>
             </View>
@@ -65,15 +97,7 @@ function MovieDetail(props) {
 
           <View style={styles.synopsis}>
             <Text style={styles.synopsisHeader}>Synopsis</Text>
-            <Text style={styles.synopsisDesc}>
-              Thrilled by his experience with the Avengers, Peter returns home,
-              where he lives with his Aunt May, under the watchful eye of his
-              new mentor Tony Stark, Peter tries to fall back into his normal
-              daily routine - distracted by thoughts of proving himself to be
-              more than just your friendly neighborhood Spider-Man - but when
-              the Vulture emerges as a new villain, everything that Peter holds
-              most important will be threatened.
-            </Text>
+            <Text style={styles.synopsisDesc}>{dataMovie?.synopsis || ''}</Text>
           </View>
           <View style={{backgroundColor: '#f5f6f8', padding: 20}}>
             <View style={styles.scheduleDate}>
@@ -378,6 +402,12 @@ const styles = StyleSheet.create({
     color: '#4e4b66',
     fontSize: 14,
     paddingLeft: 10,
+  },
+  movieImage: {
+    width: 150,
+    height: 200,
+    resizeMode: 'cover',
+    borderRadius: 8,
   },
 });
 

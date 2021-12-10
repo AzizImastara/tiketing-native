@@ -13,12 +13,12 @@ class DrawerContent extends React.Component {
   handleLogout = async () => {
     await AsyncStorage.removeItem('token');
     await AsyncStorage.removeItem('refreshToken');
-    // props.navigation.navigate('AuthScreen', {
-    //   screen: 'Login',
-    //   // params: {
-    //   //   nama: 'Bagus TH',
-    //   // },
-    // });
+    this.props.navigation.navigate('AuthScreen', {
+      screen: 'Login',
+      // params: {
+      //   nama: 'Bagus TH',
+      // },
+    });
   };
   render() {
     return (

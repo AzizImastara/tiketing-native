@@ -1,17 +1,83 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
   Image,
   StyleSheet,
-  Button,
   ScrollView,
   TextInput,
   TouchableOpacity,
-  ImageBackground,
 } from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import axios from '../utils/axios';
+import {API_HOST} from '@env';
 
 function Account(props) {
+  const [profile, setProfile] = useState([]);
+  const [password, setPassword] = useState({
+    newPassword: '',
+    confirmPassword: '',
+  });
+  const [updateProfile, setUpdateProfile] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phoneNumber: '',
+  });
+
+  const user = useSelector(state => state.auth);
+  console.log(user, 'userr');
+
+  const getProfile = async () => {
+    try {
+      const result = await axios.get(`/user/user/${user.idUser}`);
+      console.log(result, 'result');
+      setProfile(result.data.data);
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
+
+  const handleUpdateProfileUser = async () => {
+    try {
+      const resultUpdate = await axios.patch(
+        `/user/updateProfile/${user.idUser}`,
+        updateProfile,
+      );
+      alert('Success Update Profile');
+      console.log(resultUpdate, 'updateProfile');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const updatePassword = async () => {
+    try {
+      const resultPassword = await axios.patch(
+        `/user/updatePassword/${user.idUser}`,
+        password,
+      );
+      alert('Success Update Password');
+      console.log(resultPassword, 'dajhsdh');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleProfile = (text, name) => {
+    setUpdateProfile({...updateProfile, [name]: text});
+  };
+
+  const handlePassword = (text, name) => {
+    setPassword({...password, [name]: text});
+  };
+
+  useEffect(() => {
+    getProfile();
+  }, []);
+
+  console.log(profile, 'getttttt');
+
   return (
     <ScrollView>
       <View style={styles.profileBg}>
@@ -20,40 +86,22 @@ function Account(props) {
           <Text style={styles.infoDot}>...</Text>
         </View>
         <View style={styles.profileData}>
-          <Image source={require('../assets/profile.png')} />
+          <Image
+            style={styles.userImage}
+            source={
+              profile[0]?.image
+                ? {
+                    uri: `${API_HOST}/uploads/user/${profile[0]?.image}`,
+                  }
+                : require('../assets/black.jpg')
+            }
+          />
           <View style={{marginVertical: 20}}>
-            <Text style={styles.profileName}>Jonas El Rodriguez</Text>
+            <Text style={styles.profileName}>
+              {profile[0]?.firstName || ''}
+            </Text>
             <Text style={styles.profileNameDesc}>Moviegoers</Text>
           </View>
-        </View>
-        <Text style={{fontSize: 16, color: '#4e4b66', fontWeight: '600'}}>
-          Loyalty Points
-        </Text>
-        <View style={styles.movieGoersBg}>
-          <Text style={styles.movieGoers}>Moviegoers</Text>
-          <View style={styles.movieGoersRow}>
-            <Text style={styles.moviePoint}>320</Text>
-            <Text style={styles.moviePointText}>point</Text>
-          </View>
-        </View>
-        <View>
-          <Text style={styles.textPoint}>180 points become a master</Text>
-          <TouchableOpacity
-            style={{
-              backgroundColor: '#fff',
-              borderRadius: 8,
-              width: '100%',
-              marginTop: 12,
-              borderWidth: 1,
-              borderColor: '#F5F6F8',
-            }}>
-            <Text
-              style={{
-                width: '50%',
-                backgroundColor: '#5f2eea',
-                borderRadius: 8,
-              }}></Text>
-          </TouchableOpacity>
         </View>
       </View>
       <Text
@@ -70,18 +118,39 @@ function Account(props) {
           <Text style={styles.settings}>Details Information</Text>
         </View>
         <View>
-          <Text style={styles.text}>Full Name</Text>
+          <Text style={styles.text}>First Name</Text>
           <TextInput
             style={styles.textInput}
             placeholder="Jonas El Rodriguez"
+            // value={profile[0]?.firstName || ''}
+            onChangeText={text => handleProfile(text, 'firstName')}
+          />
+          <Text style={styles.text}>Last Name</Text>
+          <TextInput
+            style={styles.textInput}
+            placeholder="Jonas El Rodriguez"
+            // value={profile[0]?.lastName || ''}
+            onChangeText={text => handleProfile(text, 'lastName')}
           />
           <Text style={styles.text}>E-mail</Text>
           <TextInput
             style={styles.textInput}
             placeholder="jonasrodrigu123@gmail.com"
+            // value={profile[0]?.email || ''}
+            onChangeText={text => handleProfile(text, 'email')}
           />
           <Text style={styles.text}>Phone Number</Text>
-          <TextInput style={styles.textInput} placeholder="+6281445687121" />
+          <TextInput
+            style={styles.textInput}
+            placeholder="+6281445687121"
+            // value={profile[0]?.phoneNumber || ''}
+            onChangeText={text => handleProfile(text, 'phoneNumber')}
+          />
+          <TouchableOpacity
+            style={styles.buttonProfile}
+            onPress={handleUpdateProfileUser}>
+            <Text style={styles.buttonProfileText}>Update Profile</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.settingsBorder}>
           <Text style={styles.settings}>Account and Privacy</Text>
@@ -92,16 +161,20 @@ function Account(props) {
             style={styles.textInput}
             placeholder="******"
             secureTextEntry={true}
+            onChangeText={text => handlePassword(text, 'newPassword')}
           />
           <Text style={styles.text}>Confirm</Text>
           <TextInput
             style={styles.textInput}
             placeholder="******"
             secureTextEntry={true}
+            onChangeText={text => handlePassword(text, 'confirmPassword')}
           />
         </View>
-        <TouchableOpacity style={styles.buttonProfile}>
-          <Text style={styles.buttonProfileText}>Update changes</Text>
+        <TouchableOpacity
+          style={styles.buttonProfile}
+          onPress={() => updatePassword()}>
+          <Text style={styles.buttonProfileText}>Update Password</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -208,6 +281,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 14,
     fontWeight: '700',
+  },
+  userImage: {
+    width: 150,
+    height: 150,
+    borderRadius: 50,
   },
 });
 

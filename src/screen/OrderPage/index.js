@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -8,9 +8,37 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Footer from '../../components/Footer';
+import Seat from '../../components/Seat';
 import Icon from 'react-native-vector-icons/Feather';
 
 function OrderPage(props) {
+  const listSeat = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+  const [selectedSeat, setSelectedSeat] = useState([]);
+  const [reservedSeat, setReservedSeat] = useState(['A1', 'C7']);
+
+  useEffect(() => {
+    console.log(props.route.params);
+  }, []);
+
+  const handleSelectedSeat = data => {
+    if (selectedSeat.includes(data)) {
+      const deleteSeat = selectedSeat.filter(el => {
+        return el !== data;
+      });
+      setSelectedSeat(deleteSeat);
+    } else {
+      setSelectedSeat([...selectedSeat, data]);
+    }
+  };
+
+  const handleResetSeat = () => {
+    setSelectedSeat([]);
+  };
+
+  const handleBookingSeat = () => {
+    console.log(selectedSeat);
+  };
+
   const handlePayment = () => {
     props.navigation.navigate('PaymentPage');
   };
@@ -34,6 +62,7 @@ function OrderPage(props) {
             backgroundColor: '#fff',
             padding: 20,
           }}>
+          {/* <Seat /> */}
           <Text
             style={{
               backgroundColor: '#dedede',
