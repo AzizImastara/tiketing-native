@@ -11,9 +11,9 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import axios from '../utils/axios';
 import {API_HOST} from '@env';
+import {profile, editProfile} from '../stores/actions/profile';
 
 function Account(props) {
-  const [profile, setProfile] = useState([]);
   const [password, setPassword] = useState({
     newPassword: '',
     confirmPassword: '',
@@ -26,17 +26,10 @@ function Account(props) {
   });
 
   const user = useSelector(state => state.auth);
-  console.log(user, 'userr');
+  const profileUser = useSelector(state => state.profile);
+  console.log(profileUser, 'userr');
 
-  const getProfile = async () => {
-    try {
-      const result = await axios.get(`/user/user/${user.idUser}`);
-      console.log(result, 'result');
-      setProfile(result.data.data);
-    } catch (error) {
-      console.log(error.response);
-    }
-  };
+  const dispatch = useDispatch();
 
   const handleUpdateProfileUser = async () => {
     try {
@@ -47,7 +40,7 @@ function Account(props) {
       alert('Success Update Profile');
       console.log(resultUpdate, 'updateProfile');
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
     }
   };
 
@@ -73,10 +66,17 @@ function Account(props) {
   };
 
   useEffect(() => {
-    getProfile();
+    dispatch(profile(user.idUser)).then(result => {
+      console.log(result, 'dapett');
+      setUpdateProfile({
+        ...updateProfile,
+        firstName: result.value.data.data[0].firstName,
+        lastName: result.value.data.data[0].lastName,
+        email: result.value.data.data[0].email,
+        phoneNumber: result.value.data.data[0].phoneNumber,
+      });
+    });
   }, []);
-
-  console.log(profile, 'getttttt');
 
   return (
     <ScrollView>
@@ -89,17 +89,15 @@ function Account(props) {
           <Image
             style={styles.userImage}
             source={
-              profile[0]?.image
+              profileUser.data.image
                 ? {
-                    uri: `${API_HOST}/uploads/user/${profile[0]?.image}`,
+                    uri: `${API_HOST}/uploads/user/${profileUser.data.image}`,
                   }
                 : require('../assets/black.jpg')
             }
           />
           <View style={{marginVertical: 20}}>
-            <Text style={styles.profileName}>
-              {profile[0]?.firstName || ''}
-            </Text>
+            <Text style={styles.profileName}>{updateProfile.firstName}</Text>
             <Text style={styles.profileNameDesc}>Moviegoers</Text>
           </View>
         </View>
@@ -122,35 +120,35 @@ function Account(props) {
           <TextInput
             style={styles.textInput}
             placeholder="Jonas El Rodriguez"
-            // value={profile[0]?.firstName || ''}
+            value={updateProfile.firstName}
             onChangeText={text => handleProfile(text, 'firstName')}
           />
           <Text style={styles.text}>Last Name</Text>
           <TextInput
             style={styles.textInput}
-            placeholder="Jonas El Rodriguez"
-            // value={profile[0]?.lastName || ''}
+            placeholder="Rodriguez"
+            value={updateProfile.lastName}
             onChangeText={text => handleProfile(text, 'lastName')}
           />
           <Text style={styles.text}>E-mail</Text>
           <TextInput
             style={styles.textInput}
             placeholder="jonasrodrigu123@gmail.com"
-            // value={profile[0]?.email || ''}
+            value={updateProfile.email}
             onChangeText={text => handleProfile(text, 'email')}
           />
           <Text style={styles.text}>Phone Number</Text>
           <TextInput
             style={styles.textInput}
             placeholder="+6281445687121"
-            // value={profile[0]?.phoneNumber || ''}
+            value={updateProfile.phoneNumber}
             onChangeText={text => handleProfile(text, 'phoneNumber')}
           />
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.buttonProfile}
             onPress={handleUpdateProfileUser}>
             <Text style={styles.buttonProfileText}>Update Profile</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         <View style={styles.settingsBorder}>
           <Text style={styles.settings}>Account and Privacy</Text>
