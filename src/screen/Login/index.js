@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from '../../utils/axios';
 import {connect} from 'react-redux';
 import {login} from '../../stores/actions/auth';
+import Toast from 'react-native-simple-toast';
 
 function Login(props) {
   const [form, setForm] = useState({email: '', password: ''});
@@ -19,6 +20,8 @@ function Login(props) {
     try {
       // const result = await axios.post('/auth/login', form);
       const result = await props.login(form);
+      Toast.show(result.value.data.msg);
+      // console.log(result.value.data.msg, 'ssssss');
       await AsyncStorage.setItem('token', result.value.data.data.token);
       await AsyncStorage.setItem(
         'refreshToken',
@@ -28,7 +31,8 @@ function Login(props) {
         screen: 'Home',
       });
     } catch (error) {
-      console.log(error);
+      Toast.show(error.response.data.msg);
+      // console.log(error);
     }
   };
 

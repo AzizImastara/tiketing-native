@@ -129,6 +129,11 @@ function Home(props) {
                 />
                 <Text style={styles.movieTitle}>{item.name}</Text>
                 <Text style={styles.movieGenre}>{item.category}</Text>
+                <TouchableOpacity
+                  style={styles.movieButton}
+                  onPress={() => handleDetail(item.id)}>
+                  <Text style={styles.movieButtonText}>Details</Text>
+                </TouchableOpacity>
               </View>
             )}
             keyExtractor={item => item.id}

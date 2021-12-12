@@ -8,14 +8,12 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import axios from '../../utils/axios';
+import Toast from 'react-native-simple-toast';
 
 function Register(props) {
   const handleLogin = () => {
     props.navigation.navigate('AuthScreen', {
       screen: 'Login',
-      // params: {
-      //   nama: 'Bagus TH',
-      // },
     });
   };
 
@@ -29,16 +27,18 @@ function Register(props) {
   const handleRegister = async () => {
     try {
       const result = await axios.post('/auth/register', form);
-      alert('Succes register, please check your email !');
+      // alert('Succes register, please check your email !');
+      Toast.show('Success register user, please check your email !');
       props.navigation.navigate('AuthScreen', {
         screen: 'Login',
         // params: {
         //   nama: 'Bagus TH',
         // },
       });
-      console.log(result);
+      console.log(result.data, 'sahdasjdh');
     } catch (error) {
-      console.log(error);
+      Toast.show(error.response.data.msg);
+      // console.log(error.response.data.msg);
     }
   };
 

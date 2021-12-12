@@ -15,29 +15,61 @@ import {API_HOST} from '@env';
 
 function MovieDetail(props) {
   const [dataMovie, setDataMovie] = useState([]);
+  const [dataSchedule, setDataSchedule] = useState([]);
   const [date, setDate] = useState(new Date());
   const [openDate, setOpenDate] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState();
+  const [selectTime, setSelectTime] = useState({
+    idSchedule: '',
+    time: '',
+    premiere: '',
+    price: 0,
+  });
+
+  console.log(dataMovie, 'timee');
 
   useEffect(() => {
     getDataMovie(props.route.params.params.idMovie);
     console.log(props.route.params.params.idMovie);
+    getDataSchedule();
   }, [props.route.params.params]);
 
   const getDataMovie = async id => {
     try {
       const result = await axios.get(`/movie/${id}`);
-      console.log(result, 'resss');
+      // console.log(result, 'resss');
       setDataMovie(result.data.data[0]);
+      console.log(result.data.data[0], 'aa');
     } catch (error) {
       console.log(error.response);
     }
   };
 
-  console.log(dataMovie, 'SAFHAJHSGFJH');
-  const handleOrder = () => {
-    props.navigation.navigate('OrderPage');
+  const getDataSchedule = async () => {
+    try {
+      const result = await axios.get(
+        `/schedule?page=1&dblimit=10&searchBy=movieId&search=${props.route.params.params.idMovie}`,
+      );
+      console.log(result.data.data, 'schedule');
+      setDataSchedule(result.data.data);
+    } catch (error) {
+      console.log(error.response);
+    }
   };
+
+  const handleOrder = () => {
+    props.navigation.navigate('OrderPage', {
+      params: {
+        idMovie: props.route.params.params.idMovie,
+        dataMovie: dataMovie,
+        selectTime: selectTime,
+        date: date,
+      },
+    });
+  };
+
+  // console.log(date.toISOString().split('T')[0]);
+
   return (
     <View style={{backgroundColor: '#fff'}}>
       <ScrollView>
@@ -68,7 +100,9 @@ function MovieDetail(props) {
               <View>
                 <Text style={styles.detailTextHeader}>Release Date</Text>
                 <Text style={styles.detailTextHeaderDesc}>
-                  {dataMovie?.releaseDate || ''}
+                  {dataMovie?.releaseDate
+                    ? dataMovie?.releaseDate.slice(0, 10)
+                    : ''}
                 </Text>
               </View>
               <View>
@@ -174,74 +208,55 @@ function MovieDetail(props) {
               </View>
             </View>
 
-            <View style={styles.scheduleTitle}>
-              <View style={styles.scheduleHeader}>
-                <Image
-                  style={{width: 80, resizeMode: 'contain'}}
-                  source={require('../../assets/ebuid.png')}
-                />
-                <Text style={styles.scheduleHeaderDesc}>
-                  Whatever street No.12, South Purwokerto
-                </Text>
-              </View>
-              <View style={{marginVertical: 12}}>
-                <View style={styles.schedule}>
-                  <Text>08:30am</Text>
-                  <Text>08:30am</Text>
-                  <Text>08:30am</Text>
-                  <Text>08:30am</Text>
+            {dataSchedule.map(item => (
+              <View key={item.id} style={styles.scheduleTitle}>
+                <View style={styles.scheduleHeader}>
+                  <Image
+                    style={{
+                      width: 80,
+                      resizeMode: 'contain',
+                      marginVertical: 12,
+                    }}
+                    source={
+                      item.premiere === 'hiflix'
+                        ? require('../../assets/hiflix.png')
+                        : item.premiere === 'ebu.id'
+                        ? require('../../assets/ebuid.png')
+                        : require('../../assets/cineone.png')
+                    }
+                  />
+                  <Text style={styles.scheduleHeaderDesc}>{item.location}</Text>
                 </View>
-                <View style={styles.schedule}>
-                  <Text>08:30am</Text>
-                  <Text>08:30am</Text>
-                  <Text>08:30am</Text>
-                  <Text>08:30am</Text>
+                <View style={{marginVertical: 12}}>
+                  <View style={styles.schedule}>
+                    {item.time.map(time => (
+                      <Text
+                        style={styles.scheduleTime}
+                        key={time}
+                        onPress={() =>
+                          setSelectTime({
+                            time: time,
+                            idSchedule: item.id,
+                            premiere: item.premiere,
+                            price: item.price,
+                          })
+                        }>
+                        {time}
+                      </Text>
+                    ))}
+                  </View>
                 </View>
-              </View>
-              <View style={styles.scheduleBooking}>
-                <Text style={styles.schedulePrice}>Price</Text>
-                <Text style={styles.scheduleSeat}>$10.00/seat</Text>
-              </View>
-              <TouchableOpacity style={styles.scheduleButton}>
-                <Text style={styles.scheduleButtonText} onPress={handleOrder}>
-                  Book now
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.scheduleTitle}>
-              <View style={styles.scheduleHeader}>
-                <Image
-                  style={{width: 80, resizeMode: 'contain'}}
-                  source={require('../../assets/ebuid.png')}
-                />
-                <Text style={styles.scheduleHeaderDesc}>
-                  Whatever street No.12, South Purwokerto
-                </Text>
-              </View>
-              <View style={{marginVertical: 12}}>
-                <View style={styles.schedule}>
-                  <Text>08:30am</Text>
-                  <Text>08:30am</Text>
-                  <Text>08:30am</Text>
-                  <Text>08:30am</Text>
+                <View style={styles.scheduleBooking}>
+                  <Text style={styles.schedulePrice}>Price</Text>
+                  <Text style={styles.scheduleSeat}>Rp.{item.price}/seat</Text>
                 </View>
-                <View style={styles.schedule}>
-                  <Text>08:30am</Text>
-                  <Text>08:30am</Text>
-                  <Text>08:30am</Text>
-                  <Text>08:30am</Text>
-                </View>
+                <TouchableOpacity
+                  style={styles.scheduleButton}
+                  onPress={handleOrder}>
+                  <Text style={styles.scheduleButtonText}>Book now</Text>
+                </TouchableOpacity>
               </View>
-              <View style={styles.scheduleBooking}>
-                <Text style={styles.schedulePrice}>Price</Text>
-                <Text style={styles.scheduleSeat}>$10.00/seat</Text>
-              </View>
-              <TouchableOpacity style={styles.scheduleButton}>
-                <Text style={styles.scheduleButtonText} onPress={handleOrder}>
-                  Book now
-                </Text>
-              </TouchableOpacity>
-            </View>
+            ))}
 
             <View>
               <Text style={{textAlign: 'center', color: '#5f2eea'}}>
@@ -336,7 +351,7 @@ const styles = StyleSheet.create({
   },
   schedule: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
   },
   scheduleBooking: {
     flexDirection: 'row',
@@ -346,6 +361,13 @@ const styles = StyleSheet.create({
   schedulePrice: {
     fontSize: 14,
     color: '#6b6b6b',
+  },
+  scheduleTime: {
+    fontSize: 14,
+    color: '#000',
+    borderWidth: 1,
+    padding: 4,
+    borderRadius: 4,
   },
   scheduleSeat: {
     fontSize: 14,
