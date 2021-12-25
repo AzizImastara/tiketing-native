@@ -13,28 +13,13 @@ import Footer from '../../components/Footer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from '../../utils/axios';
 import {API_HOST} from '@env';
+import Icon from 'react-native-vector-icons/Feather';
 
 function Home(props) {
   const [movie, setMovie] = useState([]);
   const [movieUpcoming, setMovieUpcoming] = useState([]);
   const [filter, setFilter] = useState('');
-
-  // const month = [
-  //   {name: 'January'},
-  //   {name: 'February'},
-  //   {name: 'March'},
-  //   {name: 'April'},
-  //   {name: 'May'},
-  //   {name: 'June'},
-  //   {name: 'July'},
-  //   {name: 'August'},
-  //   {name: 'September'},
-  //   {name: 'October'},
-  //   {name: 'November'},
-  //   {name: 'Desember'},
-  // ];
-
-  console.log(filter);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     getToken();
@@ -96,6 +81,18 @@ function Home(props) {
 
         <View
           style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderWidth: 1,
+            borderColor: '#6E7191',
+          }}>
+          <Icon name="search" size={30} color="#6e7191" />
+          <TextInput placeholder="Search Movie..." />
+        </View>
+
+        <View
+          style={{
             display: 'flex',
             alignItems: 'center',
             marginVertical: 20,
@@ -109,7 +106,7 @@ function Home(props) {
         <View style={{backgroundColor: '#d6d8e7', padding: 20}}>
           <View style={styles.showingCaption}>
             <Text style={styles.showingCaptionText}>Now Showing</Text>
-            <Text style={styles.showingCaptionText2}>view all</Text>
+            {/* <Text style={styles.showingCaptionText2}>view all</Text> */}
           </View>
 
           <FlatList
@@ -143,21 +140,8 @@ function Home(props) {
         <View style={{padding: 20}}>
           <View style={styles.showingCaption}>
             <Text style={styles.showingUpcomingText}>Upcoming Movies</Text>
-            <Text style={styles.showingCaptionText2}>view all</Text>
+            {/* <Text style={styles.showingCaptionText2}>view all</Text> */}
           </View>
-
-          {/* <FlatList
-            horizontal
-            data={month}
-            renderItem={({item}) => (
-              <TouchableOpacity
-                style={styles.monthDate}
-                onPress={() => setFilter(item)}>
-                <Text style={styles.monthDateText}>{item.name}</Text>
-              </TouchableOpacity>
-            )}
-            keyExtractor={item => item.name}
-          /> */}
 
           <ScrollView horizontal>
             <TouchableOpacity

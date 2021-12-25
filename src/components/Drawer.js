@@ -1,50 +1,71 @@
-import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import React, {useEffect, useState, useRef} from 'react';
+import {View, Text, StyleSheet, Image} from 'react-native';
 import {
   DrawerContentScrollView,
   DrawerItem,
   DrawerItemList,
 } from '@react-navigation/drawer';
+import {useDispatch, useSelector} from 'react-redux';
+import {connect} from 'react-redux';
+import {profile, editProfile} from '../stores/actions/profile';
+import {API_HOST} from '@env';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/Feather';
 
-class DrawerContent extends React.Component {
-  handleLogout = async () => {
+function DrawerContent(props) {
+  const handleLogout = async () => {
     await AsyncStorage.removeItem('token');
     await AsyncStorage.removeItem('refreshToken');
-    this.props.navigation.navigate('AuthScreen', {
+    props.navigation.navigate('AuthScreen', {
       screen: 'Login',
-      // params: {
-      //   nama: 'Bagus TH',
-      // },
     });
   };
-  render() {
-    return (
-      <View style={styles.container}>
-        <DrawerContentScrollView {...this.props}>
-          <View style={styles.containerProfile}>
-            <View style={styles.avatar} />
-            <View style={styles.biodata}>
-              <Text style={styles.title}>OhtoYaeger</Text>
-              <Text style={styles.caption}>@azizimastara_</Text>
-            </View>
-          </View>
-          <DrawerItemList {...this.props} />
-        </DrawerContentScrollView>
-        <View style={styles.containerSection}>
-          <DrawerItem
-            label="Log Out"
-            icon={({color, size}) => (
-              <Icon color={color} size={size} name="log-out" />
-            )}
-            onPress={this.handleLogout}
+  const user = useSelector(state => state.auth);
+  const profileUser = useSelector(state => state.profile);
+  const dispatch = useDispatch();
+  // useEffect(() => {
+  //   dispatch(profile(user.idUser)).then(result => {
+  //     // console.log(result, 'dapett');
+  //   });
+  // }, []);
+  useEffect(() => {
+    dispatch(profile(user.idUser));
+  }, []);
+  return (
+    <View style={styles.container}>
+      <DrawerContentScrollView {...props}>
+        <View style={styles.containerProfile}>
+          <Image
+            style={styles.avatar}
+            source={
+              profileUser.data.image
+                ? {
+                    uri: `${API_HOST}/uploads/user/${profileUser.data.image}`,
+                  }
+                : require('../assets/black.jpg')
+            }
           />
+          <View style={styles.biodata}>
+            <Text style={styles.title}>
+              {profileUser.data?.firstName || ''}
+            </Text>
+            <Text style={styles.caption}>{profileUser.data?.email}</Text>
+          </View>
         </View>
+        <DrawerItemList {...props} />
+      </DrawerContentScrollView>
+      <View style={styles.containerSection}>
+        <DrawerItem
+          label="Log Out"
+          icon={({color, size}) => (
+            <Icon color={color} size={size} name="log-out" />
+          )}
+          onPress={handleLogout}
+        />
       </View>
-    );
-  }
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -81,4 +102,11 @@ const styles = StyleSheet.create({
   },
 });
 
+// const mapStateToProps = state => ({
+//   profile: state.profile,
+// });
+
+// const mapDispatchToProps = {profile};
+
+// export default connect(mapStateToProps, mapDispatchToProps)(DrawerContent);
 export default DrawerContent;

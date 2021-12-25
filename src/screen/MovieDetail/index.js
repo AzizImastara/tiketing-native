@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  FlatList,
 } from 'react-native';
 import Footer from '../../components/Footer';
 import DatePicker from 'react-native-date-picker';
@@ -25,12 +26,12 @@ function MovieDetail(props) {
     premiere: '',
     price: 0,
   });
+  const [active, setActive] = useState(false);
 
-  console.log(dataMovie, 'timee');
+  // console.log(dataMovie, 'timee');
 
   useEffect(() => {
     getDataMovie(props.route.params.params.idMovie);
-    console.log(props.route.params.params.idMovie);
     getDataSchedule();
   }, [props.route.params.params]);
 
@@ -39,7 +40,7 @@ function MovieDetail(props) {
       const result = await axios.get(`/movie/${id}`);
       // console.log(result, 'resss');
       setDataMovie(result.data.data[0]);
-      console.log(result.data.data[0], 'aa');
+      // console.log(result.data.data[0], 'aa');
     } catch (error) {
       console.log(error.response);
     }
@@ -50,7 +51,7 @@ function MovieDetail(props) {
       const result = await axios.get(
         `/schedule?page=1&dblimit=10&searchBy=movieId&search=${props.route.params.params.idMovie}`,
       );
-      console.log(result.data.data, 'schedule');
+      // console.log(result.data.data, 'schedule');
       setDataSchedule(result.data.data);
     } catch (error) {
       console.log(error.response);
@@ -67,8 +68,6 @@ function MovieDetail(props) {
       },
     });
   };
-
-  // console.log(date.toISOString().split('T')[0]);
 
   return (
     <View style={{backgroundColor: '#fff'}}>
@@ -208,60 +207,63 @@ function MovieDetail(props) {
               </View>
             </View>
 
-            {dataSchedule.map(item => (
-              <View key={item.id} style={styles.scheduleTitle}>
-                <View style={styles.scheduleHeader}>
-                  <Image
-                    style={{
-                      width: 80,
-                      resizeMode: 'contain',
-                      marginVertical: 12,
-                    }}
-                    source={
-                      item.premiere === 'hiflix'
-                        ? require('../../assets/hiflix.png')
-                        : item.premiere === 'ebu.id'
-                        ? require('../../assets/ebuid.png')
-                        : require('../../assets/cineone.png')
-                    }
-                  />
-                  <Text style={styles.scheduleHeaderDesc}>{item.location}</Text>
-                </View>
-                <View style={{marginVertical: 12}}>
-                  <View style={styles.schedule}>
-                    {item.time.map(time => (
-                      <Text
-                        style={styles.scheduleTime}
-                        key={time}
-                        onPress={() =>
-                          setSelectTime({
-                            time: time,
-                            idSchedule: item.id,
-                            premiere: item.premiere,
-                            price: item.price,
-                          })
-                        }>
-                        {time}
-                      </Text>
-                    ))}
-                  </View>
-                </View>
-                <View style={styles.scheduleBooking}>
-                  <Text style={styles.schedulePrice}>Price</Text>
-                  <Text style={styles.scheduleSeat}>Rp.{item.price}/seat</Text>
-                </View>
-                <TouchableOpacity
-                  style={styles.scheduleButton}
-                  onPress={handleOrder}>
-                  <Text style={styles.scheduleButtonText}>Book now</Text>
-                </TouchableOpacity>
-              </View>
-            ))}
-
             <View>
-              <Text style={{textAlign: 'center', color: '#5f2eea'}}>
-                view more
-              </Text>
+              <FlatList
+                data={dataSchedule}
+                renderItem={({item}) => (
+                  <View style={styles.scheduleTitle}>
+                    <View style={styles.scheduleHeader}>
+                      <Image
+                        style={{
+                          width: 80,
+                          resizeMode: 'contain',
+                          marginVertical: 12,
+                        }}
+                        source={
+                          item.premiere === 'hiflix'
+                            ? require('../../assets/hiflix.png')
+                            : item.premiere === 'ebu.id'
+                            ? require('../../assets/ebuid.png')
+                            : require('../../assets/cineone.png')
+                        }
+                      />
+                      <Text style={styles.scheduleHeaderDesc}>
+                        {item.location}
+                      </Text>
+                    </View>
+                    <View style={{marginVertical: 12}}>
+                      <View style={styles.schedule}>
+                        {item.time.map(time => (
+                          <TouchableOpacity
+                            key={time}
+                            onPress={() =>
+                              setSelectTime({
+                                time: time,
+                                idSchedule: item.id,
+                                premiere: item.premiere,
+                                price: item.price,
+                              })
+                            }>
+                            <Text style={styles.scheduleTime}>{time}</Text>
+                          </TouchableOpacity>
+                        ))}
+                      </View>
+                    </View>
+                    <View style={styles.scheduleBooking}>
+                      <Text style={styles.schedulePrice}>Price</Text>
+                      <Text style={styles.scheduleSeat}>
+                        Rp.{item.price}/seat
+                      </Text>
+                    </View>
+                    <TouchableOpacity
+                      style={styles.scheduleButton}
+                      onPress={handleOrder}>
+                      <Text style={styles.scheduleButtonText}>Book now</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+                keyExtractor={item => item.id}
+              />
             </View>
           </View>
         </View>
@@ -368,6 +370,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 4,
     borderRadius: 4,
+  },
+  scheduleTime2: {
+    fontSize: 14,
+    color: '#5f2eea',
+    borderWidth: 1,
+    padding: 4,
+    borderRadius: 4,
+    borderColor: '#5f2eea',
   },
   scheduleSeat: {
     fontSize: 14,

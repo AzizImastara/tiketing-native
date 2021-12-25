@@ -1,51 +1,70 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
   Image,
   StyleSheet,
-  Button,
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
+import axios from '../utils/axios';
+import {useDispatch, useSelector} from 'react-redux';
 
 function History(props) {
+  const user = useSelector(state => state.auth);
+
+  const [dataBooking, setDataBooking] = useState([]);
+  console.log(dataBooking, 'dataa');
+
+  const getBooking = async () => {
+    try {
+      const result = await axios.get(`/booking/user/${user.idUser}`);
+      setDataBooking(result.data.data);
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
+
+  useEffect(() => {
+    getBooking();
+  }, []);
   return (
     <ScrollView>
-      <View style={styles.historyView}>
-        <Image
-          style={{width: 80, resizeMode: 'contain'}}
-          source={require('../assets/cineone.png')}
-        />
-        <View style={styles.historyDesc}>
-          <Text style={styles.historyDate}>
-            Tuesday, 07 July 2020 - 04:30pm
-          </Text>
-          <View style={styles.historyTitleParent}>
-            <Text style={styles.historyTitle}>Spider-Man: Homecoming</Text>
+      {dataBooking.map(item => (
+        <View key={item.id} style={styles.historyView}>
+          <Image
+            style={{width: 80, resizeMode: 'contain'}}
+            source={
+              item.premiere === 'hiflix'
+                ? require('../assets/hiflix.png')
+                : item.premiere === 'ebu.id'
+                ? require('../assets/ebuid.png')
+                : require('../assets/cineone.png')
+            }
+          />
+          <View style={styles.historyDesc}>
+            <Text style={styles.historyDate}>
+              {item.dateBooking ? item.dateBooking.slice(0, 10) : ''} -{' '}
+              {item.timeBooking}
+            </Text>
+            <View style={styles.historyTitleParent}>
+              <Text style={styles.historyTitle}>{item.name}</Text>
+            </View>
           </View>
+          <TouchableOpacity
+            style={
+              item.statusUse === 'active'
+                ? styles.borderActive
+                : item.statusUse === 'notActive'
+                ? styles.borderUse
+                : ''
+            }>
+            <Text style={styles.buttonText}>
+              {item.statusUse === 'active' ? 'Ticket in active' : 'Ticket used'}
+            </Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={{backgroundColor: '#00ba88', padding: 16, borderRadius: 4}}>
-          <Text style={styles.buttonText}>Ticket in active</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.historyView}>
-        <Image
-          style={{width: 80, resizeMode: 'contain'}}
-          source={require('../assets/ebuid.png')}
-        />
-        <View style={styles.historyDesc}>
-          <Text style={styles.historyDate}>Monday, 14 June 2020 - 02:00pm</Text>
-          <View style={styles.historyTitleParent}>
-            <Text style={styles.historyTitle}>Avengers: End Game</Text>
-          </View>
-        </View>
-        <TouchableOpacity
-          style={{backgroundColor: '#6e7191', padding: 16, borderRadius: 4}}>
-          <Text style={styles.buttonText}>Ticket used</Text>
-        </TouchableOpacity>
-      </View>
+      ))}
     </ScrollView>
   );
 }
@@ -77,6 +96,16 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     textAlign: 'center',
+  },
+  borderActive: {
+    backgroundColor: '#00ba88',
+    padding: 16,
+    borderRadius: 4,
+  },
+  borderUse: {
+    backgroundColor: '#6e7191',
+    padding: 16,
+    borderRadius: 4,
   },
 });
 
