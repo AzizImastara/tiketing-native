@@ -42,7 +42,7 @@ function Login(props) {
 
   const handleReset = () => {
     props.navigation.navigate('AuthScreen', {
-      screen: 'ForgotPassword',
+      screen: 'Register',
     });
   };
   return (
@@ -76,9 +76,9 @@ function Login(props) {
       </TouchableOpacity>
 
       <View style={styles.resetRow}>
-        <Text style={styles.resetText}>Forgot your password? </Text>
+        <Text style={styles.resetText}>Don't have an account? </Text>
         <Text style={styles.resetTextColor} onPress={handleReset}>
-          Reset now
+          Register here
         </Text>
       </View>
     </View>

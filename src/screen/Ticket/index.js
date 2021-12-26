@@ -2,29 +2,20 @@ import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
-  Image,
   StyleSheet,
-  Button,
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
 import Footer from '../../components/Footer';
+import QRCode from 'react-native-qrcode-svg';
+import {API_HOST} from '@env';
 
 function Ticket(props) {
   const [dataMovie, setDataMovie] = useState([]);
-  const [date, setDate] = useState('');
-  const [seat, setSeat] = useState([]);
-  const [selectedSeat, setSelectedSeat] = useState('');
-  const [selectTime, setSelectTime] = useState({});
 
   useEffect(() => {
     setDataMovie(props.route.params.params.dataMovie);
-    setDate(props.route.params.params.date.toISOString().split('T')[0]);
-    setSeat(props.route.params.params.seat);
-    setSelectTime(props.route.params.params.selectTime);
-    setSelectedSeat(props.route.params.params.selectedSeat);
-
-    console.log(props.route.params.params);
+    console.log(props.route.params.params, 'ANJER');
   }, []);
 
   const handleHome = () => {
@@ -34,31 +25,44 @@ function Ticket(props) {
     <ScrollView>
       <View style={styles.container}>
         <View style={styles.ticketContainer}>
-          <Image
-            style={{resizeMode: 'contain', marginBottom: 50}}
-            source={require('../../assets/QR.png')}
-          />
+          <View>
+            <Text style={{color: '#000', fontSize: 16}}>
+              Don't forget to screenshot the barcode !
+            </Text>
+          </View>
+          <View style={{marginVertical: 24}}>
+            <QRCode
+              value={`${API_HOST}/booking/qr/${props.route.params.params.bookingId}`}
+            />
+          </View>
+
           <View style={styles.detailRow}>
             <View>
               <Text style={styles.detailTitle}>Movie</Text>
               <Text style={styles.detailContent}>{dataMovie.name}</Text>
 
               <Text style={styles.detailTitle}>Date</Text>
-              <Text style={styles.detailContent}>{date}</Text>
+              <Text style={styles.detailContent}>
+                {props.route.params.params.dateBooking}
+              </Text>
 
               <Text style={styles.detailTitle}>Count</Text>
-              <Text style={styles.detailContent}>{seat.length} pcs</Text>
+              <Text style={styles.detailContent}>
+                {props.route.params.params.seat.length} pcs
+              </Text>
             </View>
             <View>
               <Text style={styles.detailTitle}>Category</Text>
               <Text style={styles.detailContent}>{dataMovie.category}</Text>
 
               <Text style={styles.detailTitle}>Time</Text>
-              <Text style={styles.detailContent}>{selectTime.time}</Text>
+              <Text style={styles.detailContent}>
+                {props.route.params.params.timeBooking}
+              </Text>
 
               <Text style={styles.detailTitle}>Seats</Text>
               <Text style={styles.detailContent}>
-                {(seat || []).map(seat => `${seat}, `)}
+                {props.route.params.params.seat.join(', ')}
               </Text>
             </View>
           </View>

@@ -69,10 +69,8 @@ function PaymentPage(props) {
       props.navigation.navigate('Ticket', {
         params: {
           dataMovie: props.route.params.params.dataMovie,
-          date: props.route.params.params.date,
-          selectTime: props.route.params.params.selectTime,
-          totalPayment: props.route.params.params.selectedSeat,
-          seat: props.route.params.params.seat,
+          ...booking,
+          bookingId: result.data.data.id,
         },
       });
     } catch (error) {

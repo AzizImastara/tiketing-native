@@ -79,7 +79,7 @@ function Home(props) {
           <Text style={styles.headerText2}>Find out now!</Text>
         </View>
 
-        <View
+        {/* <View
           style={{
             flexDirection: 'row',
             justifyContent: 'center',
@@ -89,7 +89,7 @@ function Home(props) {
           }}>
           <Icon name="search" size={30} color="#6e7191" />
           <TextInput placeholder="Search Movie..." />
-        </View>
+        </View> */}
 
         <View
           style={{
