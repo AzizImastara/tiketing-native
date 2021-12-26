@@ -9,6 +9,7 @@ import {
   FlatList,
 } from 'react-native';
 import Footer from '../../components/Footer';
+import Pagination from '../../components/Pagination';
 import DatePicker from 'react-native-date-picker';
 import {Picker} from '@react-native-picker/picker';
 import axios from '../../utils/axios';
@@ -17,14 +18,19 @@ import {API_HOST} from '@env';
 function MovieDetail(props) {
   const [dataMovie, setDataMovie] = useState([]);
   const [dataSchedule, setDataSchedule] = useState([]);
+  const [schedulePagination, setSchedulePagination] = useState({});
   const [date, setDate] = useState(new Date());
   const [openDate, setOpenDate] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState();
   const [selectTime, setSelectTime] = useState({
     idSchedule: '',
     time: '',
     premiere: '',
     price: 0,
+  });
+  const [params, setParams] = useState({
+    page: 1,
+    limit: 2,
+    movieId: props.route.params.params.idMovie,
   });
   const [active, setActive] = useState(false);
 
@@ -49,13 +55,34 @@ function MovieDetail(props) {
   const getDataSchedule = async () => {
     try {
       const result = await axios.get(
-        `/schedule?page=1&dblimit=10&searchBy=movieId&search=${props.route.params.params.idMovie}`,
+        `/schedule?page=${params.page}&dblimit=${params.limit}&searchBy=movieId&search=${props.route.params.params.idMovie}`,
       );
       // console.log(result.data.data, 'schedule');
       setDataSchedule(result.data.data);
+      setSchedulePagination(result.data.pagination);
+      // console.log(result.data.pagination);
     } catch (error) {
       console.log(error.response);
     }
+  };
+
+  const handlePagination = item => {
+    setParams({
+      ...params,
+      page: item,
+    });
+
+    axios
+      .get(
+        `/schedule?page=${item}&dblimit=${params.limit}&searchBy=movieId&search=${props.route.params.params.idMovie}`,
+      )
+      .then(res => {
+        setDataSchedule(res.data.data);
+        setSchedulePagination(res.data.pagination);
+      })
+      .catch(err => {
+        console.log(err.response);
+      });
   };
 
   const handleOrder = () => {
@@ -156,7 +183,7 @@ function MovieDetail(props) {
                 }}
               />
 
-              <View>
+              {/* <View>
                 <Picker
                   style={styles.picker}
                   selectedValue={selectedLanguage}
@@ -204,12 +231,13 @@ function MovieDetail(props) {
                     style={styles.pickerItem}
                   />
                 </Picker>
-              </View>
+              </View> */}
             </View>
 
             <View>
               <FlatList
                 data={dataSchedule}
+                keyExtractor={item => item.id}
                 renderItem={({item}) => (
                   <View style={styles.scheduleTitle}>
                     <View style={styles.scheduleHeader}>
@@ -262,7 +290,11 @@ function MovieDetail(props) {
                     </TouchableOpacity>
                   </View>
                 )}
-                keyExtractor={item => item.id}
+              />
+              <Pagination
+                totalPage={schedulePagination.totalPage}
+                currentPage={params.page}
+                onPress={item => handlePagination(item)}
               />
             </View>
           </View>

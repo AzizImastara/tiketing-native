@@ -13,6 +13,7 @@ import MovieDetail from '../screen/MovieDetail';
 import OrderPage from '../screen/OrderPage';
 import PaymentPage from '../screen/PaymentPage';
 import Ticket from '../screen/Ticket';
+import Search from '../screen/Search';
 
 function HomeNavigator() {
   return (
@@ -58,6 +59,18 @@ function ProfileNavigator() {
   );
 }
 
+function SearchNavigator() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        component={Search}
+        name="Search"
+        options={{headerShown: false}}
+      />
+    </Stack.Navigator>
+  );
+}
+
 function AppNavigator() {
   return (
     <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
@@ -78,6 +91,17 @@ function AppNavigator() {
           title: 'Profile',
           drawerIcon: ({size, color}) => (
             <Icon name="user" size={size} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        component={SearchNavigator}
+        name="SearchNavigator"
+        options={{
+          // drawerPosition: 'right',
+          title: 'Search',
+          drawerIcon: ({size, color}) => (
+            <Icon name="search" size={size} color={color} />
           ),
         }}
       />
