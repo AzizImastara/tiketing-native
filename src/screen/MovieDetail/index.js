@@ -14,6 +14,7 @@ import DatePicker from 'react-native-date-picker';
 import {Picker} from '@react-native-picker/picker';
 import axios from '../../utils/axios';
 import {API_HOST} from '@env';
+import Toast from 'react-native-simple-toast';
 
 function MovieDetail(props) {
   const [dataMovie, setDataMovie] = useState([]);
@@ -30,11 +31,9 @@ function MovieDetail(props) {
   const [params, setParams] = useState({
     page: 1,
     limit: 2,
-    movieId: props.route.params.params.idMovie,
   });
-  const [active, setActive] = useState(false);
 
-  // console.log(dataMovie, 'timee');
+  // console.log(selectTime, 'timee');
 
   useEffect(() => {
     getDataMovie(props.route.params.params.idMovie);
@@ -86,6 +85,10 @@ function MovieDetail(props) {
   };
 
   const handleOrder = () => {
+    if (selectTime.time === '') {
+      Toast.show('Please select time first !');
+      return;
+    }
     props.navigation.navigate('OrderPage', {
       params: {
         idMovie: props.route.params.params.idMovie,
@@ -272,7 +275,15 @@ function MovieDetail(props) {
                                 price: item.price,
                               })
                             }>
-                            <Text style={styles.scheduleTime}>{time}</Text>
+                            <Text
+                              style={[
+                                styles.scheduleTime,
+                                time === selectTime.time
+                                  ? styles.scheduleTimeActive
+                                  : null,
+                              ]}>
+                              {time}
+                            </Text>
                           </TouchableOpacity>
                         ))}
                       </View>
@@ -403,13 +414,13 @@ const styles = StyleSheet.create({
     padding: 4,
     borderRadius: 4,
   },
-  scheduleTime2: {
+  scheduleTimeActive: {
     fontSize: 14,
-    color: '#5f2eea',
     borderWidth: 1,
     padding: 4,
     borderRadius: 4,
-    borderColor: '#5f2eea',
+    backgroundColor: '#5f2eea',
+    color: 'white',
   },
   scheduleSeat: {
     fontSize: 14,

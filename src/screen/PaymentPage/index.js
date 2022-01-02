@@ -45,7 +45,7 @@ function PaymentPage(props) {
 
   // console.log(payment, 'payyyyy');
 
-  console.log(booking, 'bokingneh bos');
+  // console.log(booking.paymentMethod, 'bokingneh bos');
 
   useEffect(() => {
     dispatch(profile(user.idUser)).then(result => {
@@ -62,8 +62,12 @@ function PaymentPage(props) {
 
   const handleBooking = async () => {
     try {
+      if (booking.paymentMethod === '') {
+        Toast.show('Please choose payment method');
+        return;
+      }
       const result = await axios.post(`/booking`, booking);
-      console.log(result);
+      // console.log(result);
       setBooking(result.data.data);
       Toast.show('Success booking movie !');
       props.navigation.navigate('Ticket', {
@@ -85,13 +89,6 @@ function PaymentPage(props) {
     setDate(props.route.params.params.date.toISOString().split('T')[0]);
     setSelectedSeat(props.route.params.params.selectedSeat);
     setSeat(props.route.params.params.seat);
-    // console.log(props.route.params.params.seat, 'seat');
-    // console.log(props.route.params.params.selectTime.idSchedule, 'select');
-    // console.log(
-    //   props.route.params.params.date.toISOString().split('T')[0],
-    //   'date',
-    // );
-    // console.log(props.route.params.params.selectedSeat, 'seatprice');
   }, []);
 
   // const handleTicket = () => {
@@ -116,7 +113,12 @@ function PaymentPage(props) {
           }}>
           <View style={styles.paymentChose}>
             <TouchableOpacity
-              style={styles.paymentBorder}
+              style={[
+                styles.paymentBorder,
+                booking.paymentMethod === 'GooglePay'
+                  ? styles.paymentBorderActive
+                  : null,
+              ]}
               onPress={() =>
                 setBooking({...booking, paymentMethod: 'GooglePay'})
               }>
@@ -126,7 +128,12 @@ function PaymentPage(props) {
               />
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.paymentBorder}
+              style={[
+                styles.paymentBorder,
+                booking.paymentMethod === 'Visa'
+                  ? styles.paymentBorderActive
+                  : null,
+              ]}
               onPress={() => setBooking({...booking, paymentMethod: 'Visa'})}>
               <Image
                 style={styles.paymentMethod}
@@ -134,7 +141,12 @@ function PaymentPage(props) {
               />
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.paymentBorder}
+              style={[
+                styles.paymentBorder,
+                booking.paymentMethod === 'GoPay'
+                  ? styles.paymentBorderActive
+                  : null,
+              ]}
               onPress={() => setBooking({...booking, paymentMethod: 'GoPay'})}>
               <Image
                 style={styles.paymentMethod}
@@ -144,7 +156,12 @@ function PaymentPage(props) {
           </View>
           <View style={styles.paymentChose}>
             <TouchableOpacity
-              style={styles.paymentBorder}
+              style={[
+                styles.paymentBorder,
+                booking.paymentMethod === 'Paypal'
+                  ? styles.paymentBorderActive
+                  : null,
+              ]}
               onPress={() => setBooking({...booking, paymentMethod: 'Paypal'})}>
               <Image
                 style={styles.paymentMethod}
@@ -152,7 +169,12 @@ function PaymentPage(props) {
               />
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.paymentBorder}
+              style={[
+                styles.paymentBorder,
+                booking.paymentMethod === 'Ovo'
+                  ? styles.paymentBorderActive
+                  : null,
+              ]}
               onPress={() => setBooking({...booking, paymentMethod: 'Ovo'})}>
               <Image
                 style={styles.paymentMethod}
@@ -160,7 +182,12 @@ function PaymentPage(props) {
               />
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.paymentBorder}
+              style={[
+                styles.paymentBorder,
+                booking.paymentMethod === 'Dana'
+                  ? styles.paymentBorderActive
+                  : null,
+              ]}
               onPress={() => setBooking({...booking, paymentMethod: 'Dana'})}>
               <Image
                 style={styles.paymentMethod}
@@ -238,6 +265,12 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     margin: 4,
     borderColor: '#dedede',
+  },
+  paymentBorderActive: {
+    borderWidth: 1,
+    borderRadius: 4,
+    margin: 4,
+    borderColor: 'red',
   },
   paymentMethod: {
     width: 60,

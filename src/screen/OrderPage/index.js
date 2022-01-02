@@ -12,6 +12,7 @@ import {
 import Footer from '../../components/Footer';
 import Seat from '../../components/Seat';
 import Icon from 'react-native-vector-icons/Feather';
+import Toast from 'react-native-simple-toast';
 
 function OrderPage(props) {
   const listSeat = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
@@ -54,21 +55,25 @@ function OrderPage(props) {
     setSelectedSeat([]);
   };
 
+  console.log(selectedSeat);
+
   const handleBookingSeat = () => {
     console.log(selectedSeat);
   };
 
   const handlePayment = () => {
-    props.navigation.navigate('PaymentPage', {
-      params: {
-        idMovie: props.route.params.params.idMovie,
-        dataMovie: props.route.params.params.dataMovie,
-        date: props.route.params.params.date,
-        selectTime: props.route.params.params.selectTime,
-        seat: selectedSeat,
-        selectedSeat: selectTime.price * selectedSeat.length,
-      },
-    });
+    selectedSeat.length > 0
+      ? props.navigation.navigate('PaymentPage', {
+          params: {
+            idMovie: props.route.params.params.idMovie,
+            dataMovie: props.route.params.params.dataMovie,
+            date: props.route.params.params.date,
+            selectTime: props.route.params.params.selectTime,
+            seat: selectedSeat,
+            selectedSeat: selectTime.price * selectedSeat.length,
+          },
+        })
+      : Toast.show('Please select seat first');
   };
   return (
     <ScrollView>
