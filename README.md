@@ -23,8 +23,34 @@ Pada aplikasi Ticketing ini custommer dapat melakukan pemesanan tiket, melihat j
 
 ## Download APK
 
-- https://drive.google.com/file/d/1Np1izsVjtyjnx_DxaXi5WbByyw0n1JLE/view?usp=sharing
+- [Ticketing APK](https://drive.google.com/file/d/1Np1izsVjtyjnx_DxaXi5WbByyw0n1JLE/view?usp=sharing)
 
 ## Screenshot
 
-- Soon
+#### Login
+
+<img src="https://github.com/AzizImastara/tiketing-native/blob/master/src/assets/readme/login.jpeg" alt="login" />
+
+#### Drawer
+
+<img src="https://github.com/AzizImastara/tiketing-native/blob/master/src/assets/readme/drawer.jpeg" alt="drawer" />
+
+#### Movie
+
+<img src="https://github.com/AzizImastara/tiketing-native/blob/master/src/assets/readme/movie.jpeg" alt="movie" />
+
+#### Order
+
+<img src="https://github.com/AzizImastara/tiketing-native/blob/master/src/assets/readme/order.jpeg" alt="order" />
+
+#### Payment
+
+<img src="https://github.com/AzizImastara/tiketing-native/blob/master/src/assets/readme/payment.jpeg" alt="payment" />
+
+#### Ticket
+
+<img src="https://github.com/AzizImastara/tiketing-native/blob/master/src/assets/readme/tiket.jpeg" alt="tiket" />
+
+#### Profile
+
+<img src="https://github.com/AzizImastara/tiketing-native/blob/master/src/assets/readme/profile.jpeg" alt="profile" />
