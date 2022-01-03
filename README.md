@@ -21,6 +21,10 @@ Pada aplikasi Ticketing ini custommer dapat melakukan pemesanan tiket, melihat j
 - npx react-native run-android
 - npx react-native start
 
+## Download APK
+
+- https://drive.google.com/file/d/1Np1izsVjtyjnx_DxaXi5WbByyw0n1JLE/view?usp=sharing
+
 ## Screenshot
 
 - Soon
